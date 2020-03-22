@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="head.html">
+    </head>
+    <body>
+        <div class="container">
+            <div>
+                トップページ
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="sampleDataTable" class="table display" border="1">
+                        <thead>
+                        <tr>
+                            <th>コード</th>
+                            <th>都道府県</th>
+                            <th>コード:都道府県</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+        <script th:replace="javascript.html"></script>
+
+        <script content="text/javascript">
+            $(document).ready(function(){
+               //
+               $.extend($.fn.dataTable.defaults, {
+                    language: {
+                        url: "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Japanese.json"
+                    }
+                });
+                //
+                $.ajax({
+                    url: "http://localhost:8080/province/list",
+                    type: "GET",
+                    dataType: "json"
+                }).done(function(data, status, jqXHR){
+                    //console.log("data:" + JSON.stringify(data));
+                    //console.log("status:" + JSON.stringify(status));
+                    //console.log("jqXHR:" + JSON.stringify(jqXHR));
+                    setData(data);
+                    console.log("succeed!");
+                }).fail(function(jqXHR, textStatus, errorThrown ) {
+                    console.log("failed.");
+                }).always(function(){
+                    console.log("always.");
+                });
+            });
+
+            function setData(pData){
+                console.log("setData start");
+                $("#sampleDataTable").DataTable({
+                    data: pData,
+                    columns: [
+                        {data: 'code'},
+                        {data: 'name'},
+                        {data: null, render:function(data,type,row){
+                            //console.log("data:" + JSON.stringify(data));
+                            //console.log("type:" + JSON.stringify(type));
+                            //console.log("row:" + JSON.stringify(row));
+                            return data.code + ":" + data.name;
+                        }},
+                    ],
+                });
+            };
+        </script>
+
+    </body>
+</html>

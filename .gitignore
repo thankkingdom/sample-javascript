@@ -30,3 +30,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### add 
+bin
+.DS_Store
